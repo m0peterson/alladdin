@@ -1,0 +1,5 @@
+# Godot imports, local editor state, logs and runtime data.
+.godot/
+
+# Locally downloaded Godot binary.
+.tools/
