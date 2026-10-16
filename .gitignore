@@ -3,3 +3,6 @@
 
 # Locally downloaded Godot binary.
 .tools/
+
+# Intermediate work and local review tooling.
+work/
