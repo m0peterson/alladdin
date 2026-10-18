@@ -97,7 +97,7 @@ func _physics_process(delta: float) -> void:
 func _update_detection(delta: float) -> void:
 	_state_time += delta
 	var excluded: Array[RID] = []
-	if _player is CollisionObject2D:
+	if is_instance_valid(_player) and _player is CollisionObject2D:
 		excluded.append((_player as CollisionObject2D).get_rid())
 	var sees_player: bool = is_instance_valid(_player) and can_see(_player.global_position, excluded)
 	if sees_player:

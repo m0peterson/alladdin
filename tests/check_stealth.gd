@@ -29,6 +29,7 @@ func _run() -> void:
 	guard.configure(player)
 	guard.set_physics_process(true)
 	var ui: Control = DetectionUI.new()
+	ui.process_mode = Node.PROCESS_MODE_ALWAYS
 	current_scene.add_child(ui)
 	ui.setup([guard])
 	await _frames(8)
@@ -39,6 +40,7 @@ func _run() -> void:
 	paused = true
 	await _frames(15)
 	_expect(guard.suspicion == paused_suspicion and guard.position == paused_position, "pause freezes detection and movement")
+	_expect(not ui.visible, "detection UI hides behind paused modal")
 	paused = false
 	await _frames(55)
 	_expect(guard.state == Patrol.State.CHASE, "sustained sight starts chase")
@@ -72,6 +74,14 @@ func _run() -> void:
 	_expect(guard.state == Patrol.State.PATROL, "unreachable snapshot returns without hanging")
 	_expect(guard.last_known_position == Vector2(340, 200), "report retains snapshot only")
 	await _check_sneak()
+	var removed_target: Node2D = Node2D.new()
+	world.add_child(removed_target)
+	guard.configure(removed_target)
+	guard.report_crime(Vector2(340, 200))
+	removed_target.free()
+	guard.set_physics_process(true)
+	await _frames(4)
+	_expect(guard.state == Patrol.State.CHASE, "freed player reference leaves snapshot pursuit safe")
 	if failures:
 		push_error("FAIL: T11 stealth (%d assertions)" % failures)
 		quit(1)

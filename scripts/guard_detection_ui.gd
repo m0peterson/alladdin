@@ -27,6 +27,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if get_tree().paused:
+		hide()
+		return
 	var strongest: int = GuardPatrol.State.PATROL
 	var amount: float = 0.0
 	for entry: Variant in _guards:
