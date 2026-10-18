@@ -37,11 +37,16 @@ func close() -> void:
 
 func _build() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	position = Vector2(7, 8)
-	size = Vector2(306, 164)
+	position = Vector2(7, 22)
+	size = Vector2(306, 142)
 	var ui_theme := Theme.new()
 	ui_theme.default_font_size = 10
 	theme = ui_theme
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.08, 0.06, 0.12, 1.0)
+	panel_style.border_color = Color(0.6, 0.45, 0.24, 1.0)
+	panel_style.set_border_width_all(1)
+	add_theme_stylebox_override("panel", panel_style)
 	_title = Label.new()
 	_title.position = Vector2(6, 3)
 	_title.size = Vector2(294, 15)
@@ -59,22 +64,25 @@ func _build() -> void:
 	_sell_button.pressed.connect(_switch_mode.bind(false))
 	add_child(_sell_button)
 	var close_button := Button.new()
+	close_button.name = "Close"
 	close_button.text = "Закрыть"
 	close_button.position = Vector2(213, 22)
 	close_button.size = Vector2(87, 20)
 	close_button.pressed.connect(close)
 	add_child(close_button)
 	var scroll := ScrollContainer.new()
+	scroll.name = "Scroll"
 	scroll.position = Vector2(6, 46)
-	scroll.size = Vector2(294, 89)
+	scroll.size = Vector2(294, 67)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	_rows = VBoxContainer.new()
+	_rows.name = "Rows"
 	_rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_rows.add_theme_constant_override("separation", 1)
 	scroll.add_child(_rows)
 	_message = Label.new()
-	_message.position = Vector2(6, 138)
+	_message.position = Vector2(6, 116)
 	_message.size = Vector2(294, 23)
 	_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_message.add_theme_font_size_override("font_size", 9)
