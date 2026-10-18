@@ -119,10 +119,14 @@ func _refresh() -> void:
 		label.text = "%s ×%d%s" % [item.get("name", stack["item_id"]), stack["quantity"], marker]
 		row.add_child(label)
 		var action := Button.new()
-		var price: int = _service.get_buy_price(stack["item_id"]) if _buying else _service.get_sell_price(stack["item_id"])
+		var price: int = _service.get_offer_price(_merchant_id, stack["item_id"], _buying)
+		var refusal: String = _service.get_trade_refusal(_merchant_id, stack, _buying)
 		action.text = "%s %d д." % ["Купить" if _buying else "Продать", price]
 		action.tooltip_text = str(item.get("description", ""))
-		action.disabled = not item.get("sellable", false) or stack["stolen"] or stack["item_id"] == "lamp"
+		# Refused goods stay actionable so the player receives a visible reason.
+		if not refusal.is_empty():
+			action.text = "Отказ"
+			action.tooltip_text = refusal
 		action.pressed.connect(_transact.bind(str(stack["stack_id"])))
 		row.add_child(action)
 	if stacks.is_empty():

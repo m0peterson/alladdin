@@ -18,6 +18,15 @@ window/stretch/scale_mode="integer"
 
 [input]
 
+sneak={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode": 4194325)]
+}
+steal={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode": 70)]
+}
+
 inventory={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode": 73)]

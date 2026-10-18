@@ -213,6 +213,10 @@ func _check_distance_boundary() -> void:
 
 
 func _check_npc_and_modal_input() -> void:
+	# Keep the shared plain-NPC contract covered. The production fence now
+	# opens the quest UI, which check_t11_t14.gd exercises separately.
+	var production_id: String = fence.target_id
+	fence.target_id = "plain_npc_fixture"
 	await _place(Vector2(104, 390))
 	var before: int = completed
 	var health_before: int = game.player_state.health
@@ -255,6 +259,7 @@ func _check_npc_and_modal_input() -> void:
 	_release()
 	await _frames(2)
 	_expect(game.player_state.health == health_before and game.player_state.money == money_before, "NPC conversation does not change health or money")
+	fence.target_id = production_id
 
 
 func _check_container() -> void:

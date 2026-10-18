@@ -15,8 +15,8 @@ func _run() -> void:
 	state = PlayerState.new()
 	state.money = 100
 	inventory = ItemInventory.new()
-	_expect(service.get_merchant_ids().size() == 2, "two legal merchants only")
-	_expect(service.get_merchant("fence").is_empty(), "fence has no trade")
+	_expect(service.get_merchant_ids().size() == 3, "two legal merchants and fence")
+	_expect(service.is_fence("fence"), "fence has separate trade")
 	var west: Dictionary = service.get_merchant("merchantwest")
 	var east: Dictionary = service.get_merchant("merchanteast")
 	var west_stack: Dictionary = west["stacks"][0]

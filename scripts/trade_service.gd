@@ -18,7 +18,7 @@ func _init() -> void:
 			stock.add_item(row["item_id"], int(row["quantity"]), {
 				"owner_id": merchant_id, "source_id": merchant_id,
 			})
-		_merchants[merchant_id] = {"name": entry["name"], "budget": int(entry["budget"]), "inventory": stock}
+		_merchants[merchant_id] = {"name": entry["name"], "budget": int(entry["budget"]), "inventory": stock, "fence": bool(entry.get("fence", false))}
 
 
 func get_merchant_ids() -> Array[String]:
@@ -33,7 +33,7 @@ func get_merchant(merchant_id: String) -> Dictionary:
 		return {}
 	var merchant: Dictionary = _merchants[merchant_id]
 	return {"id": merchant_id, "name": merchant["name"], "budget": merchant["budget"],
-		"stacks": (merchant["inventory"] as ItemInventory).get_stacks()}
+		"stacks": (merchant["inventory"] as ItemInventory).get_stacks(), "fence": merchant["fence"]}
 
 
 func get_buy_price(item_id: String) -> int:
@@ -42,6 +42,31 @@ func get_buy_price(item_id: String) -> int:
 
 func get_sell_price(item_id: String) -> int:
 	return maxi(1, get_buy_price(item_id) / 2) if get_buy_price(item_id) > 0 else 0
+
+
+func is_fence(merchant_id: String) -> bool:
+	return bool(_merchants.get(merchant_id, {}).get("fence", false))
+
+
+func get_offer_price(merchant_id: String, item_id: String, buying: bool = true) -> int:
+	if not _merchants.has(merchant_id):
+		return 0
+	if buying:
+		return get_buy_price(item_id)
+	# A fence pays less than even the legal resale offer, including cheap food.
+	return maxi(1, get_sell_price(item_id) / 2) if is_fence(merchant_id) else get_sell_price(item_id)
+
+
+func get_trade_refusal(merchant_id: String, stack: Dictionary, _buying: bool = false) -> String:
+	if not _merchants.has(merchant_id):
+		return "Торговец недоступен."
+	var item_id: String = str(stack.get("item_id", ""))
+	var item: Dictionary = ItemCatalog.get_item(item_id)
+	if not item.get("sellable", false) or item.get("type", "") == "quest" or item_id == "lamp":
+		return "Этот предмет нельзя продать."
+	if stack.get("stolen", false) and not is_fence(merchant_id):
+		return "Законный торговец не принимает краденое."
+	return ""
 
 
 func buy(merchant_id: String, stack_id: String, quantity: int, player_state: PlayerState, inventory: ItemInventory) -> bool:
@@ -73,12 +98,10 @@ func _trade(merchant_id: String, stack_id: String, quantity: int, state: PlayerS
 	if stack.is_empty() or int(stack["quantity"]) < quantity:
 		return _reject("Недостаточно товара.")
 	var item_id: String = stack["item_id"]
-	var item: Dictionary = ItemCatalog.get_item(item_id)
-	if not item.get("sellable", false) or item.get("type", "") == "quest" or item_id == "lamp":
-		return _reject("Этот предмет нельзя продать.")
-	if stack["stolen"]:
-		return _reject("Законный торговец не принимает краденое.")
-	var price: int = get_buy_price(item_id) if buying else get_sell_price(item_id)
+	var refusal: String = get_trade_refusal(merchant_id, stack, buying)
+	if not refusal.is_empty():
+		return _reject(refusal)
+	var price: int = get_offer_price(merchant_id, item_id, buying)
 	# Cap before multiplication so invalid quantities cannot overflow money.
 	if price <= 0 or quantity > MAX_AMOUNT / price:
 		return _reject("Слишком большая сделка.")
