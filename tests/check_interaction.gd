@@ -66,6 +66,7 @@ func _run() -> void:
 	_expect(chest.kind == 1, "container uses common target with container kind")
 	await _check_selection()
 	await _check_unavailable()
+	await _check_distance_boundary()
 	await _check_npc_and_modal_input()
 	await _check_container()
 	await _check_discarded_target()
@@ -143,7 +144,11 @@ func _check_unavailable() -> void:
 	game.interactions.try_interact()
 	_expect(completed == before and not chest.opened, "stale distant target cannot act")
 	await _place(Vector2(104, 390))
+	# A changed target must never redirect the pending action to another nearby NPC/container.
+	_expect(game.interactions.current_target == fence and chest.is_available(game.player), "stale-hint fixture has a selected NPC and valid alternative")
 	fence.enabled = false
+	game.interactions.try_interact()
+	_expect(completed == before and not chest.opened and game.interactions.current_target == null, "E on stale hint does not silently act on the available alternative")
 	game.interactions.refresh_target()
 	_expect(game.interactions.current_target == chest, "disabled nearest target is skipped")
 	chest.enabled = false
@@ -181,6 +186,30 @@ func _check_unavailable() -> void:
 	blocker.queue_free()
 	await _frames(2)
 	chest.enabled = true
+
+
+func _check_distance_boundary() -> void:
+	await _place(Vector2(384, 376))
+	var target: InteractionTarget = InteractionTarget.new()
+	target.target_id = "regression_distance_boundary"
+	target.display_name = "Граница"
+	target.message = "Граничная цель"
+	game.world.get_node("World").add_child(target)
+	target.global_position = game.player.global_position + Vector2(InteractionTarget.INTERACTION_DISTANCE, 0)
+	await _frames(2)
+	game.interactions.refresh_target()
+	_expect(target.is_available(game.player) and game.interactions.current_target == target, "target at exactly 32 px is available and selected")
+	_expect(game.interaction_hint.text == target.prompt(), "boundary target has the matching hint")
+	var before: int = completed
+	# Move after the displayed selection without a refresh: keypress must revalidate range.
+	target.global_position.x += 0.25
+	_expect(not target.is_available(game.player), "target just beyond 32 px is unavailable")
+	game.interactions.try_interact()
+	_expect(completed == before and not game.dialogue.visible and game.interactions.current_target == null, "target moving beyond range after its hint cannot act")
+	game.interactions.refresh_target()
+	_expect(not game.interaction_hint.visible, "out-of-range boundary target leaves no hint")
+	target.queue_free()
+	await _frames(2)
 
 
 func _check_npc_and_modal_input() -> void:
