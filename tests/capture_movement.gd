@@ -18,7 +18,7 @@ func _capture() -> void:
 		push_error("FAIL: cannot create capture directory")
 		quit(1)
 		return
-	if change_scene_to_file("res://scenes/start.tscn") != OK:
+	if change_scene_to_file("res://tests/fixtures/movement_arena.tscn") != OK:
 		quit(1)
 		return
 	await scene_changed

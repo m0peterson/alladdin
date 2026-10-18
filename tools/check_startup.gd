@@ -34,7 +34,7 @@ func _check_scene() -> void:
 		push_error("Startup scene is not ready")
 		quit(1)
 		return
-	var title: Label = current_scene.get_node_or_null("Title") as Label
+	var title: Label = current_scene.get_node_or_null("Overlay/Title") as Label
 	if title == null or title.text != "Аладдин: Тени Аграбы":
 		push_error("Startup title is missing")
 		quit(1)

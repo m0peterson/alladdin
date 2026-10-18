@@ -13,7 +13,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if change_scene_to_file("res://scenes/start.tscn") != OK:
+	if change_scene_to_file("res://tests/fixtures/movement_arena.tscn") != OK:
 		push_error("FAIL: cannot open the movement arena")
 		quit(1)
 		return
