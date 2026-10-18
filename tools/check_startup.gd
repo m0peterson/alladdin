@@ -3,7 +3,7 @@ extends SceneTree
 
 func _initialize() -> void:
 	var expected: Dictionary = {
-		"application/run/main_scene": "res://scenes/start.tscn",
+		"application/run/main_scene": "res://scenes/game.tscn",
 		"display/window/size/viewport_width": 320,
 		"display/window/size/viewport_height": 180,
 		"display/window/stretch/mode": "viewport",
@@ -20,7 +20,7 @@ func _initialize() -> void:
 
 
 func _load_scene() -> void:
-	var result: Error = change_scene_to_file("res://scenes/start.tscn")
+	var result: Error = change_scene_to_file("res://scenes/game.tscn")
 	if result != OK:
 		push_error("Cannot load the startup scene")
 		quit(1)
@@ -34,7 +34,7 @@ func _check_scene() -> void:
 		push_error("Startup scene is not ready")
 		quit(1)
 		return
-	var title: Label = current_scene.get_node_or_null("Overlay/Title") as Label
+	var title: Label = current_scene.get_node_or_null("Interface/MainMenu/Title") as Label
 	if title == null or title.text != "Аладдин: Тени Аграбы":
 		push_error("Startup title is missing")
 		quit(1)

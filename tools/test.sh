@@ -31,3 +31,17 @@ if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T03 bazaar route
     echo 'FAIL: сценарий T03 содержит ошибки или не завершился.' >&2
     exit 1
 fi
+
+log="$project_dir/.godot/check-logs/ui.log"
+status=0
+timeout 60s "$project_dir/tools/godot.sh" --headless --fixed-fps 60 \
+    --script res://tests/check_ui.gd >"$log" 2>&1 || status=$?
+cat "$log"
+if (( status != 0 )); then
+    echo "FAIL: T04 UI (exit $status)." >&2
+    exit "$status"
+fi
+if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T04 menus, shared HUD state, pause and input isolation' "$log"; then
+    echo 'FAIL: сценарий T04 содержит ошибки или не завершился.' >&2
+    exit 1
+fi
