@@ -45,3 +45,17 @@ if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T04 menus, share
     echo 'FAIL: сценарий T04 содержит ошибки или не завершился.' >&2
     exit 1
 fi
+
+log="$project_dir/.godot/check-logs/interaction.log"
+status=0
+timeout 60s "$project_dir/tools/godot.sh" --headless --fixed-fps 60 \
+    --script res://tests/check_interaction.gd >"$log" 2>&1 || status=$?
+cat "$log"
+if (( status != 0 )); then
+    echo "FAIL: T05 interaction (exit $status)." >&2
+    exit "$status"
+fi
+if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T05 interaction' "$log"; then
+    echo 'FAIL: сценарий T05 содержит ошибки или не завершился.' >&2
+    exit 1
+fi

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="Player"]
 [ext_resource type="PackedScene" path="res://scenes/bazaar_prop.tscn" id="Prop"]
 [ext_resource type="PackedScene" path="res://scenes/role_marker.tscn" id="Role"]
 [ext_resource type="Script" path="res://scripts/bazaar_ground.gd" id="Ground"]
+[ext_resource type="Script" path="res://scripts/interaction_target.gd" id="Interaction"]
 
 [node name="Start" type="Control"]
 layout_mode = 3
@@ -162,11 +163,43 @@ role = "merchant"
 tint = Color(0.23, 0.49, 0.48, 1)
 metadata/world_id = "merchanteast"
 
+[node name="Interaction" type="Node2D" parent="World/MerchantWest"]
+script = ExtResource("Interaction")
+target_id = "merchantwest"
+display_name = "Торговец тканями"
+message = "Торговец: На базаре тесно. К складу можно пройти через переулок."
+
+[node name="Interaction" type="Node2D" parent="World/MerchantEast"]
+script = ExtResource("Interaction")
+target_id = "merchanteast"
+display_name = "Торговец пряностями"
+message = "Торговец: Аромат пряностей привёл тебя сюда? Добро пожаловать!"
+
 [node name="Fence" parent="World" instance=ExtResource("Role")]
 position = Vector2(96, 376)
 role = "fence"
 tint = Color(0.48, 0.35, 0.57, 1)
 metadata/world_id = "fence"
+
+[node name="Interaction" type="Node2D" parent="World/Fence"]
+script = ExtResource("Interaction")
+target_id = "fence"
+display_name = "Скупщик"
+message = "Скупщик: Здесь можно передохнуть. На склад ведут два пути."
+
+[node name="Chest" parent="World" instance=ExtResource("Prop")]
+position = Vector2(128, 392)
+footprint = Vector2(20, 12)
+rise = 10.0
+tint = Color(0.62, 0.40, 0.22, 1)
+metadata/world_id = "fence_chest"
+
+[node name="Interaction" type="Node2D" parent="World/Chest"]
+script = ExtResource("Interaction")
+target_id = "fence_chest"
+display_name = "Сундук"
+kind = 1
+message = "Сундук пуст. Здесь пока нечего взять."
 
 [node name="Bandit" parent="World" instance=ExtResource("Role")]
 position = Vector2(552, 344)

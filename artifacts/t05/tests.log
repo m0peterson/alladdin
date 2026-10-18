@@ -1,0 +1,21 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: straight distance over 12 ticks = 14.3999633789062
+PASS: keyboard input, speed, facing and idle/walk
+INFO: checked all 12 wall sides, diagonal slide/corner and four arena bounds
+INFO: eight animations checked; sprite and collider share the foot anchor
+PASS: T02 movement, collisions, facing and sprite foot baseline
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: two distinct warehouse entrances and all five zones reached without waypoint teleports
+INFO: 12 wall sides, five NPCs, diagonal slide/corner and all four map boundaries checked
+PASS: T03 bazaar routes, zones, walls, NPC collisions and foot anchors
+NOT RUN: visual Y sorting; inspect the actual renderer separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T04 menus, shared HUD state, pause and input isolation
+NOT RUN: rendered Cyrillic readability; check separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T05 interaction — stable nearest target, shared NPC/container action, distance, occlusion and modal input
+NOT RUN: rendered hint/dialogue readability; check separately

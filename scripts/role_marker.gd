@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-# Static stand-ins only: no patrol, interaction, combat or inventory.
+# Static roles; optional child Interaction handles dialogue, without AI or trade.
 @export_enum("merchant", "fence", "bandit", "guard") var role: String = "merchant"
 @export var tint: Color = Color("ba7047")
 
