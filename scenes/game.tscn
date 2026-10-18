@@ -76,7 +76,7 @@ offset_right = 312.0
 offset_bottom = 180.0
 mouse_filter = 2
 theme_override_font_sizes/font_size = 10
-text = "WASD / стрелки · E — действие · Esc — пауза"
+text = "WASD · E · I — вещи · Space — удар · Q — рывок · Esc"
 horizontal_alignment = 1
 
 [node name="InteractionHint" type="Label" parent="Interface/HUD"]

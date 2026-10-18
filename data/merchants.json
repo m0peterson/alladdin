@@ -1,0 +1,6 @@
+{
+  "merchants": [
+    {"id": "merchantwest", "name": "Западный торговец", "budget": 80, "stock": [{"item_id": "silk", "quantity": 4}, {"item_id": "spices", "quantity": 5}, {"item_id": "bread", "quantity": 8}]},
+    {"id": "merchanteast", "name": "Восточный торговец", "budget": 65, "stock": [{"item_id": "pottery", "quantity": 5}, {"item_id": "copper", "quantity": 4}, {"item_id": "perfume", "quantity": 3}, {"item_id": "bread", "quantity": 6}]}
+  ]
+}

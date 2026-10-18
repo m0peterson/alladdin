@@ -112,9 +112,9 @@ func _run() -> void:
 	_expect(old_state.changed.get_connections().is_empty(), "old HUD subscription removed")
 	await _click(game.new_game_button)
 	_expect(game.player_state != old_state, "new game owns fresh state")
-	_expect(game.player_state.health == 100 and game.player_state.money == 0, "new game resets health and money")
+	_expect(game.player_state.health == 100 and game.player_state.money == Game.STARTING_MONEY, "new game resets health and money")
 	old_state.money = 999
-	_expect(game.money_label.text == "Динары: 0", "discarded state cannot change HUD")
+	_expect(game.money_label.text == "Динары: %d" % Game.STARTING_MONEY, "discarded state cannot change HUD")
 	for cycle: int in range(3):
 		await _tap(KEY_ESCAPE)
 		_expect(paused and game.pause_menu.visible, "repeated pause opens")
