@@ -3,7 +3,8 @@ extends Control
 
 var _guards: Array = []
 var _label: Label
-var _bar: ProgressBar
+var _bar: ColorRect
+var _fill: ColorRect
 
 
 func setup(guards: Array) -> void:
@@ -16,14 +17,23 @@ func _ready() -> void:
 	_label = Label.new()
 	_label.position = Vector2.ZERO
 	_label.add_theme_font_size_override("font_size", 9)
+	_label.add_theme_color_override("font_shadow_color", Color(0.08, 0.06, 0.12, 1))
+	_label.add_theme_constant_override("shadow_offset_x", 1)
+	_label.add_theme_constant_override("shadow_offset_y", 1)
 	add_child(_label)
-	_bar = ProgressBar.new()
+	# Plain rects keep the physical height at five pixels regardless of
+	# theme font minimums imposed by ProgressBar.
+	_bar = ColorRect.new()
 	_bar.position = Vector2(0, 13)
 	_bar.size = Vector2(144, 5)
-	_bar.max_value = 1.0
-	_bar.show_percentage = false
+	_bar.color = Color("302b39")
 	_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bar)
+	_fill = ColorRect.new()
+	_fill.size = Vector2(0, 5)
+	_fill.color = Color("ffb670")
+	_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bar.add_child(_fill)
 
 
 func _process(_delta: float) -> void:
@@ -48,4 +58,4 @@ func _process(_delta: float) -> void:
 	visible = strongest != GuardPatrol.State.PATROL
 	_label.text = {GuardPatrol.State.SUSPICIOUS: "Стража: подозрение", GuardPatrol.State.CHASE: "Тревога! Преследование", GuardPatrol.State.SEARCH: "Стража ищет вас"}.get(strongest, "")
 	_label.modulate = Color("ffb670") if strongest == GuardPatrol.State.CHASE else Color("ffe4a0")
-	_bar.value = amount
+	_fill.size.x = _bar.size.x * clampf(amount, 0.0, 1.0)
