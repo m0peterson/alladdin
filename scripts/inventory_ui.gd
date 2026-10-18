@@ -19,6 +19,9 @@ func _ready() -> void:
 	offset_top = 22
 	offset_right = 312
 	offset_bottom = 164
+	var background: StyleBoxFlat = StyleBoxFlat.new()
+	background.bg_color = Color(0.13, 0.10, 0.14, 1.0)
+	add_theme_stylebox_override("panel", background)
 	add_theme_font_size_override("font_size", 10)
 	var title: Label = Label.new()
 	title.text = "Инвентарь"
