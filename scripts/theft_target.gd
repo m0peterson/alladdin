@@ -23,7 +23,7 @@ func seed(item_id: String, quantity: int = 1, provenance: Dictionary = {}) -> bo
 
 
 func prompt() -> String:
-	return "F (удерживать) — Украсть: %s" % display_name if not stock.get_stacks().is_empty() else "Пусто: %s" % display_name
+	return "Удерж. F — %s" % display_name if not stock.get_stacks().is_empty() else "Пусто: %s" % display_name
 
 
 func interact(actor: Node2D) -> String:
