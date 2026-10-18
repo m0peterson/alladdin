@@ -1,0 +1,72 @@
+{
+  "silk": {
+    "name": "Шёлк",
+    "description": "Тонкая ткань для нарядов.",
+    "price": 18,
+    "type": "goods",
+    "sellable": true,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/silk.svg"
+  },
+  "spices": {
+    "name": "Пряности",
+    "description": "Ароматная смесь с восточного базара.",
+    "price": 9,
+    "type": "goods",
+    "sellable": true,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/spices.svg"
+  },
+  "pottery": {
+    "name": "Кувшин",
+    "description": "Глиняный кувшин для воды.",
+    "price": 12,
+    "type": "goods",
+    "sellable": true,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/pottery.svg"
+  },
+  "copper": {
+    "name": "Медь",
+    "description": "Медные украшения местного мастера.",
+    "price": 15,
+    "type": "goods",
+    "sellable": true,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/copper.svg"
+  },
+  "perfume": {
+    "name": "Благовония",
+    "description": "Редкое душистое масло.",
+    "price": 24,
+    "type": "goods",
+    "sellable": true,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/perfume.svg"
+  },
+  "bread": {
+    "name": "Лепёшка",
+    "description": "Свежая лепёшка. Восстанавливает 25 здоровья.",
+    "price": 5,
+    "type": "food",
+    "sellable": true,
+    "usable": true,
+    "heal": 25,
+    "icon": "res://assets/items/bread.svg"
+  },
+  "lamp": {
+    "name": "Лампа",
+    "description": "Уникальная старинная лампа. Квестовый предмет.",
+    "price": 0,
+    "type": "quest",
+    "sellable": false,
+    "usable": false,
+    "heal": 0,
+    "icon": "res://assets/items/lamp.svg"
+  }
+}
