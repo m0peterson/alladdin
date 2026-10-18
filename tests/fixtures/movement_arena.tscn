@@ -1,0 +1,85 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="Player"]
+[ext_resource type="PackedScene" path="res://scenes/wall.tscn" id="Wall"]
+
+[node name="Start" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_filter = 1
+
+[node name="Floor" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(16, 44, 304, 44, 304, 156, 16, 156)
+color = Color(0.70, 0.52, 0.34, 1)
+
+[node name="World" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="WestWall" parent="World" instance=ExtResource("Wall")]
+position = Vector2(80, 112)
+
+[node name="NorthWall" parent="World" instance=ExtResource("Wall")]
+position = Vector2(160, 92)
+
+[node name="EastWall" parent="World" instance=ExtResource("Wall")]
+position = Vector2(232, 132)
+
+[node name="Player" parent="World" instance=ExtResource("Player")]
+position = Vector2(128, 124)
+
+[node name="Boundary" type="StaticBody2D" parent="."]
+z_index = -1
+collision_layer = 1
+collision_mask = 2
+
+[node name="North" type="CollisionPolygon2D" parent="Boundary"]
+polygon = PackedVector2Array(0, 0, 320, 0, 320, 44, 0, 44)
+
+[node name="South" type="CollisionPolygon2D" parent="Boundary"]
+polygon = PackedVector2Array(0, 156, 320, 156, 320, 180, 0, 180)
+
+[node name="West" type="CollisionPolygon2D" parent="Boundary"]
+polygon = PackedVector2Array(0, 0, 16, 0, 16, 180, 0, 180)
+
+[node name="East" type="CollisionPolygon2D" parent="Boundary"]
+polygon = PackedVector2Array(304, 0, 320, 0, 320, 180, 304, 180)
+
+[node name="NorthEdge" type="Polygon2D" parent="Boundary"]
+polygon = PackedVector2Array(8, 20, 312, 20, 312, 44, 8, 44)
+color = Color(0.82, 0.62, 0.39, 1)
+
+[node name="SouthEdge" type="Polygon2D" parent="Boundary"]
+polygon = PackedVector2Array(8, 156, 312, 156, 312, 164, 8, 164)
+color = Color(0.48, 0.31, 0.25, 1)
+
+[node name="WestEdge" type="Polygon2D" parent="Boundary"]
+polygon = PackedVector2Array(8, 44, 16, 44, 16, 156, 8, 156)
+color = Color(0.48, 0.31, 0.25, 1)
+
+[node name="EastEdge" type="Polygon2D" parent="Boundary"]
+polygon = PackedVector2Array(304, 44, 312, 44, 312, 156, 304, 156)
+color = Color(0.48, 0.31, 0.25, 1)
+
+[node name="Title" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 1.0
+offset_right = 312.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(0.96, 0.83, 0.59, 1)
+theme_override_font_sizes/font_size = 12
+text = "Аладдин: Тени Аграбы"
+horizontal_alignment = 1
+
+[node name="Controls" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 165.0
+offset_right = 312.0
+offset_bottom = 180.0
+theme_override_colors/font_color = Color(0.96, 0.83, 0.59, 1)
+theme_override_font_sizes/font_size = 10
+text = "Движение: WASD / стрелки"
+horizontal_alignment = 1

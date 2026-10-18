@@ -17,3 +17,17 @@ if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T02 movement, co
     echo 'FAIL: сценарий T02 содержит ошибки или не завершился.' >&2
     exit 1
 fi
+
+log="$project_dir/.godot/check-logs/bazaar.log"
+status=0
+timeout 90s "$project_dir/tools/godot.sh" --headless --fixed-fps 60 \
+    --script res://tests/check_bazaar.gd >"$log" 2>&1 || status=$?
+cat "$log"
+if (( status != 0 )); then
+    echo "FAIL: T03 bazaar (exit $status)." >&2
+    exit "$status"
+fi
+if grep -Eq '(SCRIPT ERROR|ERROR):' "$log" || ! grep -Fq 'PASS: T03 bazaar routes, zones, walls, NPC collisions and foot anchors' "$log"; then
+    echo 'FAIL: сценарий T03 содержит ошибки или не завершился.' >&2
+    exit 1
+fi

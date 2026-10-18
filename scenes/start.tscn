@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="Player"]
-[ext_resource type="PackedScene" path="res://scenes/wall.tscn" id="Wall"]
+[ext_resource type="PackedScene" path="res://scenes/bazaar_prop.tscn" id="Prop"]
+[ext_resource type="PackedScene" path="res://scenes/role_marker.tscn" id="Role"]
+[ext_resource type="Script" path="res://scripts/bazaar_ground.gd" id="Ground"]
 
 [node name="Start" type="Control"]
 layout_mode = 3
@@ -12,59 +14,229 @@ grow_horizontal = 2
 grow_vertical = 2
 texture_filter = 1
 
-[node name="Floor" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(16, 44, 304, 44, 304, 156, 16, 156)
-color = Color(0.70, 0.52, 0.34, 1)
+[node name="Floor" type="Node2D" parent="."]
+script = ExtResource("Ground")
+
+[node name="MarketLabel" type="Label" parent="Floor"]
+offset_left = 96.0
+offset_top = 284.0
+theme_override_colors/font_color = Color(0.97, 0.86, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0.22, 0.16, 0.18, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 10
+text = "Базар"
+
+[node name="WarehouseLabel" type="Label" parent="Floor"]
+offset_left = 476.0
+offset_top = 112.0
+theme_override_colors/font_color = Color(0.97, 0.86, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0.22, 0.16, 0.18, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 10
+text = "Склад"
+
+[node name="AlleyLabel" type="Label" parent="Floor"]
+offset_left = 348.0
+offset_top = 82.0
+theme_override_colors/font_color = Color(0.97, 0.86, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0.22, 0.16, 0.18, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 10
+text = "Переулок"
+
+[node name="FenceLabel" type="Label" parent="Floor"]
+offset_left = 56.0
+offset_top = 304.0
+theme_override_colors/font_color = Color(0.97, 0.86, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0.22, 0.16, 0.18, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 10
+text = "Скупщик"
+
+[node name="CombatLabel" type="Label" parent="Floor"]
+offset_left = 432.0
+offset_top = 282.0
+theme_override_colors/font_color = Color(0.97, 0.86, 0.64, 1)
+theme_override_colors/font_shadow_color = Color(0.22, 0.16, 0.18, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 10
+text = "Площадка боя"
 
 [node name="World" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="WestWall" parent="World" instance=ExtResource("Wall")]
-position = Vector2(80, 112)
+[node name="Divider" parent="World" instance=ExtResource("Prop")]
+position = Vector2(296, 264)
+footprint = Vector2(80, 168)
+rise = 16.0
+cloth = false
+tint = Color(0.64, 0.44, 0.32, 1)
+metadata/world_id = "divider"
 
-[node name="NorthWall" parent="World" instance=ExtResource("Wall")]
-position = Vector2(160, 92)
+[node name="WarehouseNorth" parent="World" instance=ExtResource("Prop")]
+position = Vector2(508, 96)
+footprint = Vector2(184, 16)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehousenorth"
 
-[node name="EastWall" parent="World" instance=ExtResource("Wall")]
-position = Vector2(232, 132)
+[node name="WarehouseWestUpper" parent="World" instance=ExtResource("Prop")]
+position = Vector2(424, 120)
+footprint = Vector2(16, 24)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehousewestupper"
+
+[node name="WarehouseWestLower" parent="World" instance=ExtResource("Prop")]
+position = Vector2(424, 208)
+footprint = Vector2(16, 56)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehousewestlower"
+
+[node name="WarehouseEast" parent="World" instance=ExtResource("Prop")]
+position = Vector2(592, 208)
+footprint = Vector2(16, 112)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehouseeast"
+
+[node name="WarehouseSouthLeft" parent="World" instance=ExtResource("Prop")]
+position = Vector2(452, 208)
+footprint = Vector2(72, 16)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehousesouthleft"
+
+[node name="WarehouseSouthRight" parent="World" instance=ExtResource("Prop")]
+position = Vector2(560, 208)
+footprint = Vector2(80, 16)
+rise = 16.0
+cloth = false
+tint = Color(0.68, 0.49, 0.34, 1)
+metadata/world_id = "warehousesouthright"
+
+[node name="StallWest" parent="World" instance=ExtResource("Prop")]
+position = Vector2(88, 192)
+footprint = Vector2(48, 16)
+rise = 14.0
+cloth = true
+tint = Color(0.66, 0.26, 0.28, 1)
+metadata/world_id = "stallwest"
+
+[node name="StallEast" parent="World" instance=ExtResource("Prop")]
+position = Vector2(192, 248)
+footprint = Vector2(48, 16)
+rise = 14.0
+cloth = true
+tint = Color(0.26, 0.48, 0.45, 1)
+metadata/world_id = "stalleast"
+
+[node name="FenceCounter" parent="World" instance=ExtResource("Prop")]
+position = Vector2(88, 352)
+footprint = Vector2(48, 16)
+rise = 14.0
+cloth = true
+tint = Color(0.39, 0.32, 0.49, 1)
+metadata/world_id = "fencecounter"
+
+[node name="MerchantWest" parent="World" instance=ExtResource("Role")]
+position = Vector2(88, 216)
+role = "merchant"
+tint = Color(0.73, 0.43, 0.26, 1)
+metadata/world_id = "merchantwest"
+
+[node name="MerchantEast" parent="World" instance=ExtResource("Role")]
+position = Vector2(192, 272)
+role = "merchant"
+tint = Color(0.23, 0.49, 0.48, 1)
+metadata/world_id = "merchanteast"
+
+[node name="Fence" parent="World" instance=ExtResource("Role")]
+position = Vector2(96, 376)
+role = "fence"
+tint = Color(0.48, 0.35, 0.57, 1)
+metadata/world_id = "fence"
+
+[node name="Bandit" parent="World" instance=ExtResource("Role")]
+position = Vector2(552, 344)
+role = "bandit"
+tint = Color(0.45, 0.31, 0.28, 1)
+metadata/world_id = "bandit"
+
+[node name="Guard" parent="World" instance=ExtResource("Role")]
+position = Vector2(544, 224)
+role = "guard"
+tint = Color(0.29, 0.43, 0.64, 1)
+metadata/world_id = "guard"
 
 [node name="Player" parent="World" instance=ExtResource("Player")]
-position = Vector2(128, 124)
+position = Vector2(136, 368)
+
+[node name="Camera2D" type="Camera2D" parent="World/Player"]
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 432
+position_smoothing_enabled = false
+
+[node name="Regions" type="Node2D" parent="."]
+
+[node name="Market" type="Marker2D" parent="Regions"]
+position = Vector2(144, 296)
+metadata/zone_id = "market"
+
+[node name="Warehouse" type="Marker2D" parent="Regions"]
+position = Vector2(504, 176)
+metadata/zone_id = "warehouse"
+
+[node name="Alley" type="Marker2D" parent="Regions"]
+position = Vector2(376, 136)
+metadata/zone_id = "alley"
+
+[node name="Fence" type="Marker2D" parent="Regions"]
+position = Vector2(136, 368)
+metadata/zone_id = "fence"
+
+[node name="Combat" type="Marker2D" parent="Regions"]
+position = Vector2(504, 344)
+metadata/zone_id = "combat"
 
 [node name="Boundary" type="StaticBody2D" parent="."]
-z_index = -1
 collision_layer = 1
 collision_mask = 2
 
 [node name="North" type="CollisionPolygon2D" parent="Boundary"]
-polygon = PackedVector2Array(0, 0, 320, 0, 320, 44, 0, 44)
+polygon = PackedVector2Array(0, 0, 640, 0, 640, 48, 0, 48)
 
 [node name="South" type="CollisionPolygon2D" parent="Boundary"]
-polygon = PackedVector2Array(0, 156, 320, 156, 320, 180, 0, 180)
+polygon = PackedVector2Array(0, 416, 640, 416, 640, 448, 0, 448)
 
 [node name="West" type="CollisionPolygon2D" parent="Boundary"]
-polygon = PackedVector2Array(0, 0, 16, 0, 16, 180, 0, 180)
+polygon = PackedVector2Array(0, 0, 16, 0, 16, 448, 0, 448)
 
 [node name="East" type="CollisionPolygon2D" parent="Boundary"]
-polygon = PackedVector2Array(304, 0, 320, 0, 320, 180, 304, 180)
+polygon = PackedVector2Array(624, 0, 640, 0, 640, 448, 624, 448)
 
-[node name="NorthEdge" type="Polygon2D" parent="Boundary"]
-polygon = PackedVector2Array(8, 20, 312, 20, 312, 44, 8, 44)
-color = Color(0.82, 0.62, 0.39, 1)
+[node name="Overlay" type="CanvasLayer" parent="."]
 
-[node name="SouthEdge" type="Polygon2D" parent="Boundary"]
-polygon = PackedVector2Array(8, 156, 312, 156, 312, 164, 8, 164)
-color = Color(0.48, 0.31, 0.25, 1)
+[node name="Header" type="ColorRect" parent="Overlay"]
+offset_right = 320.0
+offset_bottom = 20.0
+mouse_filter = 2
+color = Color(0.16, 0.12, 0.18, 1)
 
-[node name="WestEdge" type="Polygon2D" parent="Boundary"]
-polygon = PackedVector2Array(8, 44, 16, 44, 16, 156, 8, 156)
-color = Color(0.48, 0.31, 0.25, 1)
-
-[node name="EastEdge" type="Polygon2D" parent="Boundary"]
-polygon = PackedVector2Array(304, 44, 312, 44, 312, 156, 304, 156)
-color = Color(0.48, 0.31, 0.25, 1)
-
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="Overlay"]
 offset_left = 8.0
 offset_top = 1.0
 offset_right = 312.0
@@ -74,7 +246,14 @@ theme_override_font_sizes/font_size = 12
 text = "Аладдин: Тени Аграбы"
 horizontal_alignment = 1
 
-[node name="Controls" type="Label" parent="."]
+[node name="Footer" type="ColorRect" parent="Overlay"]
+offset_top = 165.0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+color = Color(0.16, 0.12, 0.18, 1)
+
+[node name="Controls" type="Label" parent="Overlay"]
 offset_left = 8.0
 offset_top = 165.0
 offset_right = 312.0
