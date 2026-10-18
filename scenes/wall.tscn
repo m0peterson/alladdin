@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="RectangleShape2D" id="Shape"]
+size = Vector2(32, 32)
+
+[node name="Wall" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 2
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-16, -32, 16, -32, 16, 0, -16, 0)
+color = Color(0.48, 0.31, 0.25, 1)
+
+[node name="Cap" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-16, -32, 16, -32, 16, -26, -16, -26)
+color = Color(0.82, 0.62, 0.39, 1)
+
+[node name="Mortar" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, -15, -16, -15)
+color = Color(0.34, 0.23, 0.22, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("Shape")
