@@ -31,11 +31,24 @@ func _build() -> void:
 	add_child(_label)
 	_progress = ProgressBar.new()
 	_progress.position = Vector2(0, 14)
-	_progress.size = Vector2(140, 4)
+	# Default theme boxes impose a tall minimum; explicit zero-margin boxes
+	# keep this HUD bar within y137..141 above the interaction hint.
+	var background := StyleBoxFlat.new()
+	background.bg_color = Color(0.10, 0.07, 0.05, 1.0)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.95, 0.72, 0.24, 1.0)
+	for box: StyleBoxFlat in [background, fill]:
+		box.content_margin_left = 0.0
+		box.content_margin_top = 0.0
+		box.content_margin_right = 0.0
+		box.content_margin_bottom = 0.0
+	_progress.add_theme_stylebox_override("background", background)
+	_progress.add_theme_stylebox_override("fill", fill)
 	_progress.max_value = 1.0
 	_progress.show_percentage = false
 	_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_progress)
+	_progress.size = Vector2(140, 4)
 	hide()
 
 

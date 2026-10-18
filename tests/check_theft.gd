@@ -34,6 +34,8 @@ func _run() -> void:
 	ui = TheftUI.new()
 	root.add_child(ui)
 	ui.setup(controller)
+	var progress: ProgressBar = ui.get_child(1) as ProgressBar
+	_expect(progress.get_combined_minimum_size().y <= 4.0 and progress.size.y <= 4.0, "theft bar theme minimum stays inside four-pixel HUD slot")
 	await physics_frame
 	await process_frame
 	var target: TheftTarget = _make_target("silk", 2)
