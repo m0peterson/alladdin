@@ -3,6 +3,7 @@ extends CharacterBody2D
 signal defeated
 
 const MOVE_SPEED: float = 72.0
+const SNEAK_SPEED: float = 32.0
 const ATTACK_DAMAGE: int = 20
 const ATTACK_REACH: float = 26.0
 const ATTACK_WINDUP: float = 0.10
@@ -22,6 +23,7 @@ var attack_phase: AttackPhase = AttackPhase.IDLE
 var dodge_remaining: float = 0.0
 var dodge_cooldown: float = 0.0
 var _waiting_for_release: bool = false
+var _sneak_waiting_for_release: bool = false
 var _combat_waiting_for_release: bool = false
 var _attack_requested: bool = false
 var _dodge_requested: bool = false
@@ -50,6 +52,8 @@ func _notification(what: int) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _sneak_waiting_for_release:
+		_sneak_waiting_for_release = _combat_pressed("sneak")
 	if _combat_waiting_for_release:
 		_combat_waiting_for_release = _combat_pressed("attack") or _combat_pressed("dodge")
 		_attack_requested = false
@@ -91,7 +95,7 @@ func _physics_process(delta: float) -> void:
 				attack_phase = AttackPhase.IDLE
 		if attack_phase == AttackPhase.ACTIVE:
 			_hit_in_front()
-	velocity = direction * MOVE_SPEED if attack_phase == AttackPhase.IDLE else Vector2.ZERO
+	velocity = direction * (SNEAK_SPEED if is_sneaking() else MOVE_SPEED) if attack_phase == AttackPhase.IDLE else Vector2.ZERO
 	if dodge_remaining > 0.0:
 		velocity = _dodge_direction * DODGE_SPEED
 		dodge_remaining = maxf(0.0, dodge_remaining - delta)
@@ -107,6 +111,18 @@ func _physics_process(delta: float) -> void:
 	sprite.play(("walk_" if moving else "idle_") + direction_name)
 	sprite.modulate = Color(1.0, 0.35, 0.3) if _hurt_remaining > 0.0 else (Color(0.5, 0.9, 1.0) if dodge_remaining > 0.0 else Color.WHITE)
 	queue_redraw()
+
+
+func is_sneaking() -> bool:
+	return not _sneak_waiting_for_release and InputMap.has_action("sneak") and Input.is_action_pressed("sneak") and dodge_remaining <= 0.0
+
+
+# Footsteps only: a simple radius, reduced by Shift. Guards additionally
+# require an unobstructed ray; attacks and complex acoustic propagation are out of scope.
+func get_noise_radius() -> float:
+	if get_tree().paused or _defeated or velocity.length_squared() < 1.0 or get_position_delta().length_squared() < 0.001:
+		return 0.0
+	return 12.0 if is_sneaking() else 42.0
 
 
 func _hit_in_front() -> void:
@@ -156,6 +172,7 @@ func reset_combat() -> void:
 
 
 func suppress_combat_until_release() -> void:
+	_sneak_waiting_for_release = _combat_pressed("sneak")
 	_combat_waiting_for_release = true
 	_attack_requested = false
 	_dodge_requested = false
@@ -167,6 +184,7 @@ func suppress_combat_until_release() -> void:
 
 
 func suppress_movement_until_release() -> void:
+	_sneak_waiting_for_release = _combat_pressed("sneak")
 	_waiting_for_release = true
 	velocity = Vector2.ZERO
 
