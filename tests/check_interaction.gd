@@ -305,7 +305,7 @@ func _check_reset() -> void:
 	await _frames(2)
 	chest = game.world.get_node("World/Chest/Interaction") as InteractionTarget
 	_expect(not chest.opened, "New Game resets container opened state")
-	_expect(game.player_state.health == 100 and game.player_state.money == 0, "interaction did not alter new game defaults")
+	_expect(game.player_state.health == 100 and game.player_state.money == Game.STARTING_MONEY, "interaction did not alter new game defaults")
 	await _save("new-game-reset")
 
 

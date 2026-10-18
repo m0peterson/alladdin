@@ -1,0 +1,61 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS: bandit approaches within arena
+PASS: windup gives warning before damage
+PASS: readable half-second windup
+PASS: capture bandit_windup
+PASS: capture bandit_active
+PASS: one hit changes health once
+PASS: player damage has visible hit feedback
+PASS: recovery leaves counterattack window
+PASS: capture bandit_hit_player
+PASS: no repeat damage during recovery
+PASS: pause freezes enemy windup
+PASS: paused enemy rejects damage
+PASS: real player dodge starts during warning
+PASS: dodge escapes bandit strike
+PASS: wall prevents aggro and melee damage
+PASS: enemy stays behind obstacle
+PASS: duel stays near bandit home
+PASS: bandit damage has visible hit feedback
+PASS: capture bandit_hit_feedback
+PASS: player swing 0 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 1 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 2 hits once
+PASS: duel can be won
+PASS: defeated bandit leaves combat targets
+PASS: defeated bandit stops attacking
+PASS: capture bandit_defeated
+PASS: inventory fixture adds food
+PASS: inventory fixture adds unique lamp
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: capture bandit_recovered
+PASS: T09 bandit, duel, dodge, obstacle, pause and recovery

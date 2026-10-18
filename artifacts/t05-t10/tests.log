@@ -1,0 +1,146 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: straight distance over 12 ticks = 14.3999633789062
+PASS: keyboard input, speed, facing and idle/walk
+INFO: checked all 12 wall sides, diagonal slide/corner and four arena bounds
+INFO: eight animations checked; sprite and collider share the foot anchor
+PASS: T02 movement, collisions, facing and sprite foot baseline
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: two distinct warehouse entrances and all five zones reached without waypoint teleports
+INFO: 12 wall sides, five NPCs, diagonal slide/corner and all four map boundaries checked
+PASS: T03 bazaar routes, zones, walls, NPC collisions and foot anchors
+NOT RUN: visual Y sorting; inspect the actual renderer separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T04 menus, shared HUD state, pause and input isolation
+NOT RUN: rendered Cyrillic readability; check separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T05 interaction — stable nearest target, shared NPC/container action, distance, occlusion and modal input
+NOT RUN: rendered hint/dialogue readability; check separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T06 catalog, quantities, copied reads, provenance, unique protected lamp, food and UI
+NOT RUN: game I/pause integration and rendered readability; owned by integration review
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: two legal merchants only
+PASS: fence has no trade
+PASS: buy two goods
+PASS: observers see completely settled transaction
+PASS: player pays full buy price
+PASS: stock deducted
+PASS: other merchant unchanged
+PASS: buy retains provenance
+PASS: sell two goods
+PASS: round trip has no profit
+PASS: round trip restores stock
+PASS: merchant snapshot cannot change budget
+PASS: merchant snapshot cannot change stock
+PASS: insufficient player money returns reason
+PASS: insufficient player money changes nothing
+PASS: insufficient stock returns reason
+PASS: insufficient stock changes nothing
+PASS: unknown merchant returns reason
+PASS: unknown merchant changes nothing
+PASS: unknown stack returns reason
+PASS: unknown stack changes nothing
+PASS: zero quantity returns reason
+PASS: zero quantity changes nothing
+PASS: negative quantity returns reason
+PASS: negative quantity changes nothing
+PASS: overflow quantity returns reason
+PASS: overflow quantity changes nothing
+PASS: insufficient merchant budget returns reason
+PASS: insufficient merchant budget changes nothing
+PASS: stolen goods rejected west returns reason
+PASS: stolen goods rejected west changes nothing
+PASS: stolen goods rejected east returns reason
+PASS: stolen goods rejected east changes nothing
+PASS: quest lamp rejected returns reason
+PASS: quest lamp rejected changes nothing
+PASS: quest lamp retained
+PASS: destination overflow returns reason
+PASS: destination overflow changes nothing
+PASS: merchant buys legitimate goods
+PASS: sale retains distinct provenance
+PASS: second merchant has independent working budget
+PASS: buy unique legitimate instance back
+PASS: instance ID retained without round trip profit
+PASS: no arbitrage across merchants: silk
+PASS: no arbitrage across merchants: spices
+PASS: no arbitrage across merchants: pottery
+PASS: no arbitrage across merchants: copper
+PASS: no arbitrage across merchants: perfume
+PASS: no arbitrage across merchants: bread
+PASS: trade GUI works during root pause
+PASS: GUI buy delegates full transaction to service
+PASS: sell view displays inventory
+PASS: close emits signal; root owns pause
+PASS: T07 atomic trade, refusals, provenance, round trip and GUI contract
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T08 phases, direction, overlap, walls, mouse, dodge cooldown, damage and paused/GUI held input
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: bandit approaches within arena
+PASS: windup gives warning before damage
+PASS: readable half-second windup
+PASS: one hit changes health once
+PASS: player damage has visible hit feedback
+PASS: recovery leaves counterattack window
+PASS: no repeat damage during recovery
+PASS: pause freezes enemy windup
+PASS: paused enemy rejects damage
+PASS: real player dodge starts during warning
+PASS: dodge escapes bandit strike
+PASS: wall prevents aggro and melee damage
+PASS: enemy stays behind obstacle
+PASS: duel stays near bandit home
+PASS: bandit damage has visible hit feedback
+PASS: player swing 0 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 1 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 2 hits once
+PASS: duel can be won
+PASS: defeated bandit leaves combat targets
+PASS: defeated bandit stops attacking
+PASS: inventory fixture adds food
+PASS: inventory fixture adds unique lamp
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: T09 bandit, duel, dodge, obstacle, pause and recovery
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: guard_market loops=3 waypoints=12 position=(128.4667, 144.0)
+INFO: guard_alley loops=3 waypoints=15 position=(352.0, 95.13378)
+INFO: guard_warehouse loops=3 waypoints=12 position=(554.4684, 128.0001)
+PASS: T10 three real-bazaar patrols, collisions, pause and shared visibility geometry
+NOT RUN: visual patrol review; use actual renderer separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T05–T10 integration — real menus, trade button, shared interaction, input isolation, actors and reset
