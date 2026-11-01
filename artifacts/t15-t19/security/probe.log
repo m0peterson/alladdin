@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+KNOWN_LOW_S3: trail=4097 error=Путь возврата стражника слишком длинный. Завершите погоню перед сохранением.
+SECURITY_CURRENT_RESULT: checks=63 failures=0

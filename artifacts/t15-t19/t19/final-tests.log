@@ -1,0 +1,521 @@
+UTC: 2026-11-01T11:31:41.517355+00:00
+Source: 741dc82b19d10bcce005d0618e367f9684d5f19e
+Command: GODOT_BIN=/workspace/alladdin/.tools/godot/4.7.2/Godot_v4.7.2-stable_linux.x86_64 bash tools/test.sh
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: straight distance over 12 ticks = 14.3999633789062
+PASS: keyboard input, speed, facing and idle/walk
+INFO: checked all 12 wall sides, diagonal slide/corner and four arena bounds
+INFO: eight animations checked; sprite and collider share the foot anchor
+PASS: T02 movement, collisions, facing and sprite foot baseline
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: two distinct warehouse entrances and all five zones reached without waypoint teleports
+INFO: 12 wall sides, five NPCs, diagonal slide/corner and all four map boundaries checked
+PASS: T03 bazaar routes, zones, walls, NPC collisions and foot anchors
+NOT RUN: visual Y sorting; inspect the actual renderer separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T04 menus, shared HUD state, pause and input isolation
+NOT RUN: rendered Cyrillic readability; check separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T05 interaction — stable nearest target, shared NPC/container action, distance, occlusion and modal input
+NOT RUN: rendered hint/dialogue readability; check separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T06 catalog, quantities, copied reads, provenance, unique protected lamp, food and UI
+NOT RUN: game I/pause integration and rendered readability; owned by integration review
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: two legal merchants and fence
+PASS: fence has separate trade
+PASS: buy two goods
+PASS: observers see completely settled transaction
+PASS: player pays full buy price
+PASS: stock deducted
+PASS: other merchant unchanged
+PASS: buy retains provenance
+PASS: sell two goods
+PASS: round trip has no profit
+PASS: round trip restores stock
+PASS: merchant snapshot cannot change budget
+PASS: merchant snapshot cannot change stock
+PASS: insufficient player money returns reason
+PASS: insufficient player money changes nothing
+PASS: insufficient stock returns reason
+PASS: insufficient stock changes nothing
+PASS: unknown merchant returns reason
+PASS: unknown merchant changes nothing
+PASS: unknown stack returns reason
+PASS: unknown stack changes nothing
+PASS: zero quantity returns reason
+PASS: zero quantity changes nothing
+PASS: negative quantity returns reason
+PASS: negative quantity changes nothing
+PASS: overflow quantity returns reason
+PASS: overflow quantity changes nothing
+PASS: insufficient merchant budget returns reason
+PASS: insufficient merchant budget changes nothing
+PASS: stolen goods rejected west returns reason
+PASS: stolen goods rejected west changes nothing
+PASS: stolen goods rejected east returns reason
+PASS: stolen goods rejected east changes nothing
+PASS: quest lamp rejected returns reason
+PASS: quest lamp rejected changes nothing
+PASS: quest lamp retained
+PASS: destination overflow returns reason
+PASS: destination overflow changes nothing
+PASS: merchant buys legitimate goods
+PASS: sale retains distinct provenance
+PASS: second merchant has independent working budget
+PASS: buy unique legitimate instance back
+PASS: instance ID retained without round trip profit
+PASS: no arbitrage across merchants: silk
+PASS: no arbitrage across merchants: spices
+PASS: no arbitrage across merchants: pottery
+PASS: no arbitrage across merchants: copper
+PASS: no arbitrage across merchants: perfume
+PASS: no arbitrage across merchants: bread
+PASS: trade GUI works during root pause
+PASS: GUI buy delegates full transaction to service
+PASS: sell view displays inventory
+PASS: close emits signal; root owns pause
+PASS: T07 atomic trade, refusals, provenance, round trip and GUI contract
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T08 phases, direction, overlap, walls, mouse, dodge cooldown, damage and paused/GUI held input
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: bandit approaches within arena
+PASS: windup gives warning before damage
+PASS: readable half-second windup
+PASS: one hit changes health once
+PASS: player damage has visible hit feedback
+PASS: recovery leaves counterattack window
+PASS: no repeat damage during recovery
+PASS: pause freezes enemy windup
+PASS: paused enemy rejects damage
+PASS: real player dodge starts during warning
+PASS: dodge escapes bandit strike
+PASS: wall prevents aggro and melee damage
+PASS: enemy stays behind obstacle
+PASS: duel stays near bandit home
+PASS: bandit damage has visible hit feedback
+PASS: player swing 0 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 1 hits once
+PASS: bandit damage has visible hit feedback
+PASS: player swing 2 hits once
+PASS: duel can be won
+PASS: defeated bandit leaves combat targets
+PASS: defeated bandit stops attacking
+PASS: inventory fixture adds food
+PASS: inventory fixture adds unique lamp
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: lethal hit accepted
+PASS: defeat restores max health
+PASS: defeat deducts floor ten percent
+PASS: defeat returns to start
+PASS: defeat clears combat state
+PASS: defeat retains inventory and unique lamp provenance
+PASS: T09 bandit, duel, dodge, obstacle, pause and recovery
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: guard_market loops=3 waypoints=12 position=(128.4667, 144.0)
+INFO: guard_alley loops=3 waypoints=15 position=(352.0, 95.13378)
+INFO: guard_warehouse loops=3 waypoints=12 position=(554.4684, 128.0001)
+PASS: T10 three real-bazaar patrols, collisions, pause and shared visibility geometry
+NOT RUN: visual patrol review; use actual renderer separately
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T05–T10 integration — real menus, trade button, shared interaction, input isolation, actors and reset
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T11 suspicion, chase, hidden memory, bounded search/return, wall, sneak and noise
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T12 hold, cancellation, finite stock, provenance, atomicity, GUI, lamp
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: visible guard and owner witness theft
+PASS: guard receives crime snapshot
+PASS: later event mutation cannot update knowledge
+PASS: guard sector prevents magical alarm
+PASS: guard distance prevents magical alarm
+PASS: no witnesses means no alarm
+PASS: owner witnesses and reports to guard
+PASS: unrelated owner does not witness
+PASS: owner sector checked
+PASS: nearest owner selected before visibility, not a farther duplicate
+PASS: owner distance checked
+PASS: wall blocks guard and owner witnesses
+PASS: crime signal cannot reenter reports
+PASS: one snapshot per report
+PASS: lawful merchant rejects stolen goods
+PASS: lawful refusal explains and changes nothing
+PASS: fence offer cheaper than lawful resale
+PASS: fence purchases stolen good
+PASS: callbacks see settled trade and cannot reenter
+PASS: fence retains stolen
+PASS: fence retains owner_id
+PASS: fence retains source_id
+PASS: fence retains instance_id
+PASS: finite fence stock can be bought back
+PASS: buyback cannot launder or replace identity
+PASS: bought-back stolen goods still refused
+PASS: fence ordinary trade excludes lamp atomically
+PASS: finite fence budget rejects bulk sale atomically
+PASS: legal trade remains working
+PASS: lawful GUI exposes actionable refusal
+PASS: lawful GUI displays refusal reason
+PASS: fence GUI displays actual discounted offer
+PASS: T13 witnesses, snapshot reports, fence, provenance and atomic refusal
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: quest binds shared game data
+PASS: offer is not accepted automatically
+PASS: hand over before order refused with reason
+PASS: hand over before order changes nothing
+PASS: explicit acceptance
+PASS: accept signal cannot reenter
+PASS: missing lamp refused with reason
+PASS: missing lamp changes nothing
+PASS: warehouse theft supplies unique lamp
+PASS: acquired lamp advances accepted quest
+PASS: second lamp rejected
+PASS: ordinary removal protects quest lamp
+PASS: reward overflow preflight refused with reason
+PASS: reward overflow preflight changes nothing
+PASS: delivery succeeds
+PASS: all observers see settled items, money, recipient and final stage
+PASS: all transaction signals reject recursive operations
+PASS: recipient retains stolen provenance and stable instance
+PASS: recipient snapshot cannot mutate quest
+PASS: final includes theft consequence and hint of lamp magic
+PASS: repeated delivery refused with reason
+PASS: repeated delivery changes nothing
+PASS: same setup cannot reset reward
+PASS: different game requires fresh quest
+PASS: early lamp preserves offer stage
+PASS: early lamp without agreement refused with reason
+PASS: early lamp without agreement changes nothing
+PASS: acceptance accounts for early lamp
+PASS: acceptance alone cannot complete quest
+PASS: early lamp delivery works with blocked observers
+PASS: delivery preserves signal blocking flags
+PASS: blocked observers do not prevent commit
+PASS: health recovery preserves delivery eligibility
+PASS: new game has fresh quest data
+PASS: fence processes while world paused
+PASS: dialogue stays between HUD and footer
+PASS: dialogue background opaque
+PASS: UI font supports Cyrillic
+PASS: UI offers explicit acceptance
+PASS: UI delegates acceptance then requests lamp
+PASS: UI reflects incoming lamp
+PASS: UI shows final only after hand-over
+PASS: reopened dialogue retains final without new reward
+PASS: separate trade action delegates routing to game
+PASS: close delegates pause ownership to game
+PASS: T14 quest stages, early lamp, unique delivery, atomic reward, reentry and fence UI
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INFO: route stealth=false early=false had_chase=true
+INFO: route stealth=true early=true had_chase=false
+PASS: T11–T14 integration — hold, witnesses, snapshot, GUI, trade, both routes, early lamp, reward and reset
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: T15 versioned player save, validation, safe writes, backup, F5/F9 and Continue
+NOT RUN: rendered save message readability and power-loss durability
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: new quarter full snapshot valid
+PASS: world JSON written in isolated directory
+PASS: world JSON validated after read
+PASS: real buy changes player and merchant
+PASS: real ordinary goods theft clears finite source
+PASS: real theft transfers the sole lamp
+PASS: early lamp permits ready order
+PASS: unfinished bandit attack normalizes without healing
+PASS: purchase theft quest and active alarm snapshot valid
+PASS: changed world safely replaces initial file
+PASS: complete previous world is recoverable backup
+PASS: initial snapshot applies
+PASS: changed snapshot applies atomically
+PASS: all persisted fields round trip exactly
+PASS: load does not resurrect defeated bandit
+PASS: load cannot restore stolen source or duplicate lamp
+PASS: load retains alarm and evidence position
+PASS: repeated load is idempotent
+PASS: duplicate lamp across container and player rejected
+PASS: duplicate lamp across container and player leaves whole game unchanged
+PASS: missing stable world ID rejected
+PASS: missing stable world ID leaves whole game unchanged
+PASS: invalid final guard record cannot partially apply rejected
+PASS: invalid final guard record cannot partially apply leaves whole game unchanged
+PASS: negative merchant budget rejected
+PASS: negative merchant budget leaves whole game unchanged
+PASS: inventory observer sees only fully committed snapshot
+PASS: restore changed state after observer check
+PASS: clock callback reentry rejects before any mutation
+PASS: normal restore works after day commit
+PASS: clock and refill mismatch rejected
+PASS: clock and refill mismatch leaves whole game unchanged
+PASS: legacy player-only save rejected
+PASS: legacy player-only save leaves whole game unchanged
+PASS: busy RefCounted rejected
+PASS: busy RefCounted leaves whole game unchanged
+PASS: busy RefCounted rejected
+PASS: busy RefCounted leaves whole game unchanged
+PASS: busy Node rejected
+PASS: busy Node leaves whole game unchanged
+PASS: busy Node2D rejected
+PASS: busy Node2D leaves whole game unchanged
+PASS: real quest hands over and pays once
+PASS: terminal quest and delivered lamp valid
+PASS: final world loads repeatedly
+PASS: repeat final dialogue cannot repeat reward
+PASS: completed quest missing reward flag rejected
+PASS: completed quest missing reward flag leaves whole game unchanged
+PASS: explicit full backup restoration
+PASS: backup preserves full earlier world
+PASS: 4096 trail points remain saveable
+PASS: documented 4097 trail-point limitation is explicit
+PASS: oversized trail cannot overwrite previous valid file
+PASS: previous file remains valid after long chase save refusal
+PASS: restored bounded trail permits normal loading
+PASS: T16 world persistence
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: deplete configured stock
+PASS: spend independent fence budget
+PASS: day remains zero before 360 active seconds
+PASS: no premature refill
+PASS: exact 360 second boundary
+PASS: callbacks see all markers and clock committed, reject reentrant clock operations
+PASS: daily stock and independent budget reach target
+PASS: repeat update is idempotent
+PASS: buy after refill
+PASS: same day depletion cannot trigger another grant
+PASS: past day request changes nothing
+PASS: skipped days normalize without accumulating grants
+PASS: prepare snapshot before boundary
+PASS: cross saved boundary
+PASS: restore matching time and merchants
+PASS: restoring snapshot does not account for offline time
+PASS: repeat load cannot accumulate goods
+PASS: loaded boundary refills once
+PASS: manual advance respects SceneTree pause
+PASS: paused simulation frames freeze time and stock
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid clock snapshot rejected without mutation
+PASS: invalid or overflowing delta rejected
+PASS: invalid or overflowing delta rejected
+PASS: invalid or overflowing delta rejected
+PASS: invalid or overflowing delta rejected
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: invalid merchant snapshot rejected atomically
+PASS: dynamic sale refuses money overflow
+PASS: maximum budget snapshot valid
+PASS: dynamic purchase refuses budget overflow
+PASS: restore after limit cases
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: silk
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: spices
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: pottery
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: copper
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: perfume
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: load valid stock price band
+PASS: global max bid <= min ask: bread
+PASS: restore before real trade cycles
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: cycle buys actual goods
+PASS: cycle resells across market
+PASS: closed inventory cycle has no profit
+PASS: cycle includes next-day refill
+PASS: prepare first merchant refill
+PASS: prepare late merchant refill
+PASS: exhausted counter snapshot valid
+PASS: late refill failure leaves clock and all merchants unchanged
+PASS: sell excess with distinct provenance
+PASS: refill preserves surplus and provenance
+PASS: T17 clock, pause, daily refill, snapshots and bounded no-arbitrage prices
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: five atlases, distinct four headings, support feet in all 60 frames
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: expected real GUI button exists
+PASS: expected real GUI button exists
+PASS: order accepted through real UI
+PASS: expected real GUI button exists
+PASS: real purchase changes money and inventory before save
+PASS: displayed theft target reached: market_goods
+PASS: real hold emptied container: market_goods
+PASS: displayed theft target reached: warehouse_lamp
+PASS: real hold emptied container: warehouse_lamp
+PASS: stolen lamp advances order and remains unique
+PASS: ordinary stolen loot retains provenance
+PASS: save begins with active alarm
+PASS: clock positioned immediately before day boundary
+PASS: F5 writes then opens a paused confirmation
+PASS: F5 produced a valid isolated world file
+PASS: saved snapshot matches frozen live player and world
+PASS: confirmation pause stops game clock
+PASS: modal F5/F9 cannot overwrite the save
+PASS: expected real GUI button exists
+PASS: live clock crosses saved day boundary
+PASS: merchant restocks once: merchantwest
+PASS: merchant restocks once: merchanteast
+PASS: merchant restocks once: fence
+PASS: same-day update does not repeat restock
+PASS: mutation completes ready order before rollback
+PASS: F9 loads through paused confirmation
+PASS: F9 restores player, origins, empty containers, quest, merchants, alarm and clock
+PASS: load rolls back reward and does not duplicate lamp
+PASS: repeated modal load leaves restored world unchanged
+PASS: expected real GUI button exists
+PASS: expected real GUI button exists
+PASS: pause-menu button returns to main menu
+PASS: isolated valid save enables Continue
+PASS: expected real GUI button exists
+PASS: Continue recreates the saved game and confirms load
+PASS: Continue restores the identical full snapshot
+PASS: expected real GUI button exists
+PASS: reloading before boundary reproduces one finite restock
+PASS: expected real GUI button exists
+PASS: real hand-over grants exactly one reward after load
+PASS: final world save is valid
+PASS: expected real GUI button exists
+PASS: load after finale restores settled reward and delivered lamp
+PASS: expected real GUI button exists
+PASS: reopened final dialogue after load cannot repeat reward
+PASS: second real load cannot duplicate money, loot or reward
+PASS: T15–T19 integration — real F5/F9/Continue, full world, day boundary, finite restock and final reward
+
+EXIT_CODE=0
+SCRIPT_ERROR_OR_ERROR_LINES=0
