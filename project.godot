@@ -18,6 +18,15 @@ window/stretch/scale_mode="integer"
 
 [input]
 
+quick_save={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode": 4194336)]
+}
+quick_load={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"physical_keycode": 4194340)]
+}
+
 sneak={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode": 4194325)]

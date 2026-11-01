@@ -204,13 +204,67 @@ func can_see(target_position: Vector2, excluded: Array[RID] = []) -> bool:
 
 
 func _draw() -> void:
-	var step: float = 1.0 if sin(_walk_time * 12.0) >= 0.0 else -1.0
-	draw_rect(Rect2(-6, -2, 12, 3), Color(0.15, 0.11, 0.15, 0.3))
-	draw_rect(Rect2(-5, -2 - step, 4, 2), Color("402e34"))
-	draw_rect(Rect2(1, -2 + step, 4, 2), Color("402e34"))
-	draw_rect(Rect2(-4, -13, 8, 11), Color("4a6ea3"))
-	draw_rect(Rect2(-3, -20, 6, 7), Color("e0ae75"))
-	draw_rect(Rect2(-4, -22, 8, 5), Color("b6c3c4"))
-	draw_rect(Rect2(6, -25, 1, 24), Color("b6c3c4"))
-	# A small visor follows the actual query heading.
-	draw_rect(Rect2(Vector2(-1, -18) + facing * 2, Vector2(2, 2)), Color("31445b"))
+	CharacterVisual.draw_actor(self, "guard", facing, velocity.length_squared() > 0.01, _walk_time)
+	CharacterVisual.draw_guard_state(self, state)
+
+
+func save_snapshot() -> Dictionary:
+	var trail: Array = []
+	for point: Vector2 in _trail:
+		trail.append({"x": point.x, "y": point.y})
+	return {"position": {"x": position.x, "y": position.y},
+		"facing": {"x": facing.x, "y": facing.y}, "state": state, "suspicion": suspicion,
+		"last_known_position": {"x": last_known_position.x, "y": last_known_position.y},
+		"state_time": _state_time, "trail": trail, "return_stalled": _return_stalled,
+		"waypoint_index": waypoint_index}
+
+
+static func valid_point(data: Variant, direction: bool = false) -> bool:
+	if data is not Dictionary:
+		return false
+	for axis: String in ["x", "y"]:
+		var value: Variant = data.get(axis)
+		if (value is not int and value is not float) or not is_finite(float(value)):
+			return false
+		if value < (-1 if direction else 0) or value > (1 if direction else (640 if axis == "x" else 432)):
+			return false
+	return true
+
+
+func validate_snapshot(data: Variant) -> String:
+	if data is not Dictionary or not PlayerSave.integer_in(data.get("state"), State.PATROL, State.RETURN) or not PlayerSave.integer_in(data.get("waypoint_index"), 0, route.size() - 1):
+		return "Неверное состояние стражника."
+	for key: String in ["position", "last_known_position", "facing"]:
+		if not valid_point(data.get(key), key == "facing"):
+			return "Неверное положение стражника."
+	for key: String in ["suspicion", "state_time", "return_stalled"]:
+		var value: Variant = data.get(key)
+		if (value is not int and value is not float) or not is_finite(float(value)) or value < 0 or value > (1.0 if key == "suspicion" else 1000000000.0):
+			return "Неверный таймер тревоги."
+	# Do not silently truncate: every point is needed for obstacle-safe return.
+	# Long uninterrupted chases exceeding this bound must end before saving.
+	if data.get("trail") is not Array or data["trail"].size() > 4096:
+		return "Путь возврата стражника слишком длинный. Завершите погоню перед сохранением."
+	for point: Variant in data["trail"]:
+		if not valid_point(point):
+			return "Неверный путь возврата стражника."
+	return ""
+
+
+func restore_snapshot(data: Variant) -> bool:
+	if not validate_snapshot(data).is_empty():
+		return false
+	position = Vector2(data["position"]["x"], data["position"]["y"])
+	facing = Vector2(data["facing"]["x"], data["facing"]["y"])
+	last_known_position = Vector2(data["last_known_position"]["x"], data["last_known_position"]["y"])
+	state = int(data["state"]) as State
+	suspicion = float(data["suspicion"])
+	_state_time = float(data["state_time"])
+	_return_stalled = float(data["return_stalled"])
+	waypoint_index = int(data["waypoint_index"])
+	_trail.clear()
+	for point: Dictionary in data["trail"]:
+		_trail.append(Vector2(point["x"], point["y"]))
+	velocity = Vector2.ZERO
+	queue_redraw()
+	return true

@@ -21,6 +21,12 @@ var crime: CrimeService
 var quest: LampQuest
 var fence_ui: FenceUI
 var _waiting_inventory_release: bool = true
+var saves: PlayerSave = WorldSave.new()
+var clock: GameClock
+var save_panel: Panel
+var save_message: Label
+var save_close: Button
+var backup_button: Button
 
 @onready var main_menu: Control = $Interface/MainMenu
 @onready var pause_menu: Control = $Interface/PauseMenu
@@ -38,6 +44,9 @@ var _waiting_inventory_release: bool = true
 
 func _ready() -> void:
 	new_game_button.pressed.connect(_new_game)
+	$Interface/MainMenu/Continue.pressed.connect(_load_player)
+	_setup_save_panel()
+	_refresh_continue()
 	$Interface/MainMenu/Exit.pressed.connect(_exit_game)
 	resume_button.pressed.connect(_resume)
 	$Interface/PauseMenu/MainMenu.pressed.connect(_return_to_menu)
@@ -51,9 +60,26 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if _waiting_inventory_release:
 		_waiting_inventory_release = Input.is_action_pressed("inventory")
+	if clock != null:
+		var seconds: int = int(clock.seconds_in_day)
+		$Interface/HUD/Day.text = "День %d\n%02d:%02d / 06:00" % [clock.day_index + 1, seconds / 60, seconds % 60]
 
 
 func _input(event: InputEvent) -> void:
+	if save_panel.visible:
+		if event.is_action_pressed("ui_cancel") and not event.is_echo():
+			_close_save_panel()
+			get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("quick_save") or event.is_action_pressed("quick_load"):
+		get_viewport().set_input_as_handled()
+		if event.is_echo() or world == null or get_tree().paused:
+			return
+		if event.is_action_pressed("quick_save"):
+			_save_player()
+		else:
+			_load_player()
+		return
 	if world != null and event.is_action_pressed("inventory") and not event.is_echo():
 		get_viewport().set_input_as_handled()
 		if not _waiting_inventory_release:
@@ -111,6 +137,10 @@ func _new_game() -> void:
 	world = BAZAAR.instantiate() as Control
 	# The controller and its menus keep running; all world descendants pause.
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
+	clock = GameClock.new()
+	clock.name = "GameClock"
+	clock.setup(trades)
+	world.add_child(clock)
 	player = world.get_node("World/Player") as Player
 	player.state = player_state
 	player.suppress_movement_until_release()
@@ -214,6 +244,7 @@ func _return_to_menu() -> void:
 	$WorldContainer.remove_child(world)
 	world.queue_free()
 	world = null
+	clock = null
 	player = null
 	player_state = null
 	get_tree().paused = false
@@ -238,6 +269,7 @@ func _return_to_menu() -> void:
 	crime = null
 	guards.clear()
 	main_menu.show()
+	_refresh_continue()
 	new_game_button.grab_focus()
 
 
@@ -291,3 +323,120 @@ func _update_hud() -> void:
 
 func _exit_game() -> void:
 	get_tree().quit()
+
+
+func _refresh_continue() -> void:
+	var button: Button = $Interface/MainMenu/Continue
+	# Damaged saves remain actionable so errors and explicit recovery are reachable.
+	button.disabled = not FileAccess.file_exists(saves.path) and not FileAccess.file_exists(saves.path + ".bak")
+	button.focus_mode = Control.FOCUS_NONE if button.disabled else Control.FOCUS_ALL
+
+
+func _setup_save_panel() -> void:
+	save_panel = Panel.new()
+	save_panel.name = "SaveMessage"
+	save_panel.position = Vector2(8, 24)
+	save_panel.size = Vector2(304, 132)
+	save_panel.theme = main_menu.theme
+	var background: StyleBoxFlat = StyleBoxFlat.new()
+	background.bg_color = Color("291f30")
+	background.border_color = Color("b48b52")
+	background.set_border_width_all(1)
+	save_panel.add_theme_stylebox_override("panel", background)
+	$Interface.add_child(save_panel)
+	save_message = Label.new()
+	save_message.position = Vector2(8, 6)
+	save_message.size = Vector2(288, 74)
+	save_message.add_theme_font_size_override("font_size", 10)
+	save_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	save_panel.add_child(save_message)
+	backup_button = Button.new()
+	backup_button.position = Vector2(12, 82)
+	backup_button.size = Vector2(280, 20)
+	backup_button.add_theme_font_size_override("font_size", 10)
+	backup_button.text = "Восстановить резервную копию"
+	backup_button.pressed.connect(_recover_backup)
+	save_panel.add_child(backup_button)
+	save_close = Button.new()
+	save_close.position = Vector2(72, 106)
+	save_close.size = Vector2(160, 22)
+	save_close.text = "Закрыть"
+	save_close.pressed.connect(_close_save_panel)
+	save_panel.add_child(save_close)
+	save_panel.hide()
+
+
+func _show_save_message(message: String, offer_backup: bool = false) -> void:
+	if world != null:
+		_pause_world()
+	var notice: String = "Игрок, контейнеры, заказ, торговцы, тревога и игровой день сохраняются." if saves is WorldSave else PlayerSave.WORLD_NOTICE
+	save_message.text = message + "\n" + notice
+	backup_button.visible = offer_backup and saves.has_backup()
+	$Interface.move_child(save_panel, -1)
+	save_panel.show()
+	save_close.grab_focus()
+
+
+func _close_save_panel() -> void:
+	save_panel.hide()
+	if world != null:
+		_resume()
+	else:
+		new_game_button.grab_focus()
+
+
+func _save_player() -> void:
+	var snapshot: Dictionary = (saves as WorldSave).capture_world(self) if saves is WorldSave else saves.capture(player.position, player_state, inventory)
+	var problem: String = saves.write(snapshot)
+	_refresh_continue()
+	_show_save_message("Игра сохранена. F9 — загрузить." if problem.is_empty() else problem, not problem.is_empty())
+
+
+func _load_player() -> void:
+	var result: Dictionary = saves.read_file()
+	if not result["ok"]:
+		_show_save_message(result["error"], true)
+		return
+	var problem: String = _apply_player_save(result["data"])
+	_show_save_message("Игра загружена." if problem.is_empty() else problem)
+
+
+func _recover_backup() -> void:
+	var result: Dictionary = saves.restore_backup()
+	if not result["ok"]:
+		_show_save_message(result["error"])
+		return
+	var problem: String = _apply_player_save(result["data"])
+	_refresh_continue()
+	_show_save_message("Резервная копия восстановлена и загружена." if problem.is_empty() else problem)
+
+
+func _apply_player_save(data: Dictionary) -> String:
+	# read_file validated the entire snapshot before any live state is changed.
+	var problem: String = saves.validate(data)
+	if not problem.is_empty():
+		return problem
+	if world == null:
+		_new_game()
+	if saves is WorldSave:
+		problem = (saves as WorldSave).apply(data, self)
+		if not problem.is_empty():
+			return problem
+		for window: Control in [pause_menu, dialogue, inventory_ui, trade_ui, fence_ui]:
+			window.hide()
+		theft.suppress_until_release()
+		player.suppress_movement_until_release()
+		player.suppress_combat_until_release()
+		interactions.suppress_until_release()
+		_waiting_inventory_release = true
+		_update_hud()
+		return ""
+	var saved: Dictionary = data["player"]
+	inventory.restore_snapshot(saved["inventory"])
+	player_state.health = int(saved["health"])
+	player_state.money = int(saved["money"])
+	player.position = Vector2(saved["position"]["x"], saved["position"]["y"])
+	player.reset_combat()
+	player.suppress_movement_until_release()
+	interactions.suppress_until_release()
+	return ""

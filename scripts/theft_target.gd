@@ -69,3 +69,34 @@ func transfer_to(inventory: ItemInventory, actor: Node2D) -> Dictionary:
 			inventory.changed.emit()
 	_busy = false
 	return event if removed and added else {}
+
+
+func save_snapshot() -> Dictionary:
+	return {"owner_id": owner_id, "opened": opened, "inventory": stock.save_snapshot()}
+
+
+func validate_snapshot(data: Variant) -> String:
+	if data is not Dictionary or data.get("owner_id") != owner_id or data.get("opened") is not bool:
+		return "Неверное состояние контейнера: " + target_id
+	var problem: String = ItemInventory.validate_snapshot(data.get("inventory"))
+	if not problem.is_empty():
+		return problem
+	var stacks: Array = data["inventory"]["stacks"]
+	if stacks.size() > 1 or data["opened"] != stacks.is_empty():
+		return "Содержимое контейнера не согласовано с открытием."
+	for entry: Dictionary in stacks:
+		if entry["owner_id"] != owner_id or entry["source_id"] != target_id or entry["stolen"]:
+			return "Неверное происхождение содержимого контейнера."
+	return ""
+
+
+func restore_snapshot(data: Variant) -> bool:
+	if _busy or not validate_snapshot(data).is_empty():
+		return false
+	var blocked: bool = stock.is_blocking_signals()
+	stock.set_block_signals(true)
+	stock.restore_snapshot(data["inventory"])
+	stock.set_block_signals(blocked)
+	opened = data["opened"]
+	_seeded = true
+	return true
