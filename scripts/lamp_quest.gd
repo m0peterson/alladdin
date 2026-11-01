@@ -127,3 +127,37 @@ func _on_inventory_changed() -> void:
 func _reject(message: String) -> bool:
 	last_error = message
 	return false
+
+
+func save_snapshot() -> Dictionary:
+	return {"id": "lamp_order", "stage": _stage, "reward_given": _stage == Stage.COMPLETED,
+		"delivered_lamp": get_delivered_lamp()}
+
+
+static func validate_snapshot(data: Variant) -> String:
+	if data is not Dictionary or data.get("id") != "lamp_order" or not PlayerSave.integer_in(data.get("stage"), Stage.OFFERED, Stage.COMPLETED):
+		return "Неверный заказ на лампу."
+	if data.get("reward_given") is not bool or data.get("delivered_lamp") is not Dictionary:
+		return "Неверный факт награды или передачи лампы."
+	var completed: bool = int(data["stage"]) == Stage.COMPLETED
+	if data["reward_given"] != completed or data["delivered_lamp"].is_empty() == completed:
+		return "Стадия заказа не согласована с наградой."
+	if completed:
+		var lamp: Dictionary = data["delivered_lamp"]
+		if lamp.get("item_id") != "lamp" or lamp.get("stack_id") is not String:
+			return "Неверная переданная лампа."
+		var matched: RegExMatch = RegEx.create_from_string("^stack_([1-9][0-9]{0,9})$").search(lamp["stack_id"])
+		if matched == null:
+			return "Неверная переданная лампа."
+		if not ItemInventory.validate_snapshot({"stacks": [lamp], "next_stack_id": int(matched.get_string(1)) + 1}).is_empty():
+			return "Неверная переданная лампа."
+	return ""
+
+
+func restore_snapshot(data: Variant) -> bool:
+	if not validate_snapshot(data).is_empty() or _busy:
+		return false
+	_stage = int(data["stage"]) as Stage
+	_delivered_lamp = data["delivered_lamp"].duplicate(true)
+	last_error = ""
+	return true

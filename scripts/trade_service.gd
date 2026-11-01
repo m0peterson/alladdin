@@ -7,6 +7,7 @@ const MAX_AMOUNT: int = 2147483647
 var last_error: String = ""
 var _merchants: Dictionary = {}
 var _busy: bool = false
+var _targets: Dictionary = {}
 
 
 func _init() -> void:
@@ -18,7 +19,8 @@ func _init() -> void:
 			stock.add_item(row["item_id"], int(row["quantity"]), {
 				"owner_id": merchant_id, "source_id": merchant_id,
 			})
-		_merchants[merchant_id] = {"name": entry["name"], "budget": int(entry["budget"]), "inventory": stock, "fence": bool(entry.get("fence", false))}
+		_targets[merchant_id] = {"budget": int(entry["budget"]), "stock": entry["stock"].duplicate(true)}
+		_merchants[merchant_id] = {"last_refill_day": 0, "name": entry["name"], "budget": int(entry["budget"]), "inventory": stock, "fence": bool(entry.get("fence", false))}
 
 
 func get_merchant_ids() -> Array[String]:
@@ -33,7 +35,8 @@ func get_merchant(merchant_id: String) -> Dictionary:
 		return {}
 	var merchant: Dictionary = _merchants[merchant_id]
 	return {"id": merchant_id, "name": merchant["name"], "budget": merchant["budget"],
-		"stacks": (merchant["inventory"] as ItemInventory).get_stacks(), "fence": merchant["fence"]}
+		"stacks": (merchant["inventory"] as ItemInventory).get_stacks(), "fence": merchant["fence"],
+		"last_refill_day": merchant["last_refill_day"]}
 
 
 func get_buy_price(item_id: String) -> int:
@@ -51,10 +54,23 @@ func is_fence(merchant_id: String) -> bool:
 func get_offer_price(merchant_id: String, item_id: String, buying: bool = true) -> int:
 	if not _merchants.has(merchant_id):
 		return 0
+	var base: int = get_buy_price(item_id)
+	# Bound before multiplication. Save data cannot supply prices or targets.
+	if base <= 0 or base > MAX_AMOUNT / 120:
+		return 0
+	var multiplier: int = 100
+	var stock: ItemInventory = _merchants[merchant_id]["inventory"]
+	for row: Dictionary in _targets[merchant_id]["stock"]:
+		if row["item_id"] == item_id:
+			var target: int = int(row["quantity"])
+			var remaining: int = stock.count_item(item_id)
+			multiplier = 120 if remaining < target else (80 if remaining > target else 100)
+			break
+	var ask: int = maxi(1, base * multiplier / 100)
 	if buying:
-		return get_buy_price(item_id)
-	# A fence pays less than even the legal resale offer, including cheap food.
-	return maxi(1, get_sell_price(item_id) / 2) if is_fence(merchant_id) else get_sell_price(item_id)
+		return ask
+	var bid: int = maxi(1, ask / 2)
+	return maxi(1, bid / 2) if is_fence(merchant_id) else bid
 
 
 func get_trade_refusal(merchant_id: String, stack: Dictionary, _buying: bool = false) -> String:
@@ -67,6 +83,111 @@ func get_trade_refusal(merchant_id: String, stack: Dictionary, _buying: bool = f
 	if stack.get("stolen", false) and not is_fence(merchant_id):
 		return "Законный торговец не принимает краденое."
 	return ""
+
+
+func is_busy() -> bool:
+	return _busy
+
+
+# Plain data; the clock and merchants belong to one atomic world snapshot.
+func save_snapshot() -> Dictionary:
+	var result: Dictionary = {}
+	for merchant_id: String in _merchants:
+		var merchant: Dictionary = _merchants[merchant_id]
+		result[merchant_id] = {"budget": merchant["budget"],
+			"inventory": (merchant["inventory"] as ItemInventory).save_snapshot(),
+			"last_refill_day": merchant["last_refill_day"]}
+	return result
+
+
+func validate_snapshot(data: Variant) -> String:
+	if data is not Dictionary or data.size() != _merchants.size():
+		return "Неверный набор торговцев."
+	var instances: Dictionary = {}
+	for merchant_id: String in _merchants:
+		if data.get(merchant_id) is not Dictionary:
+			return "Торговец отсутствует в сохранении."
+		var row: Dictionary = data[merchant_id]
+		if row.size() != 3 or not _integer_in(row.get("budget"), 0, MAX_AMOUNT) or not _integer_in(row.get("last_refill_day"), 0, MAX_AMOUNT):
+			return "Неверный бюджет или день пополнения."
+		var error: String = ItemInventory.validate_snapshot(row.get("inventory"))
+		if not error.is_empty():
+			return error
+		for stack: Dictionary in row["inventory"]["stacks"]:
+			if not get_trade_refusal(merchant_id, stack).is_empty():
+				return "Недопустимый товар у торговца."
+			var instance_id: String = stack["instance_id"]
+			if not instance_id.is_empty():
+				if instances.has(instance_id):
+					return "Повторный уникальный предмет у торговцев."
+				instances[instance_id] = true
+	return ""
+
+
+# Silent: WorldSave validates and commits all world sections before notifications.
+func restore_snapshot(data: Variant) -> bool:
+	if _busy:
+		return false
+	last_error = validate_snapshot(data)
+	if not last_error.is_empty():
+		return false
+	var prepared: Dictionary = _prepare_inventories(data)
+	for merchant_id: String in _merchants:
+		_merchants[merchant_id]["inventory"] = prepared[merchant_id]
+		_merchants[merchant_id]["budget"] = int(data[merchant_id]["budget"])
+		_merchants[merchant_id]["last_refill_day"] = int(data[merchant_id]["last_refill_day"])
+	return true
+
+
+# Top up rather than accumulate skipped-day grants. Prepare every merchant first.
+func refill_for_day(day: int, emit_change: bool = true) -> bool:
+	if _busy or day < 0 or day > MAX_AMOUNT:
+		return false
+	var snapshot: Dictionary = save_snapshot()
+	var prepared: Dictionary = _prepare_inventories(snapshot)
+	var modified: bool = false
+	for merchant_id: String in _merchants:
+		var row: Dictionary = snapshot[merchant_id]
+		if int(row["last_refill_day"]) > day:
+			return _reject("Нельзя вернуть экономику в прошлый день.")
+		if int(row["last_refill_day"]) == day:
+			continue
+		modified = true
+		var inventory: ItemInventory = prepared[merchant_id]
+		for target: Dictionary in _targets[merchant_id]["stock"]:
+			var item_id: String = target["item_id"]
+			var missing: int = maxi(0, int(target["quantity"]) - inventory.count_item(item_id))
+			if missing > 0 and not inventory.add_item(item_id, missing, {"owner_id": merchant_id, "source_id": merchant_id}):
+				return _reject("Не удалось пополнить товар.")
+		row["budget"] = maxi(int(row["budget"]), int(_targets[merchant_id]["budget"]))
+		row["last_refill_day"] = day
+	if not modified:
+		return true
+	_busy = true
+	for merchant_id: String in _merchants:
+		_merchants[merchant_id]["inventory"] = prepared[merchant_id]
+		_merchants[merchant_id]["budget"] = snapshot[merchant_id]["budget"]
+		_merchants[merchant_id]["last_refill_day"] = day
+	if emit_change:
+		changed.emit()
+	_busy = false
+	return true
+
+
+func _prepare_inventories(data: Dictionary) -> Dictionary:
+	var prepared: Dictionary = {}
+	for merchant_id: String in _merchants:
+		var inventory := ItemInventory.new()
+		var restored: bool = inventory.restore_snapshot(data[merchant_id]["inventory"])
+		assert(restored, "Validated merchant inventory must restore")
+		prepared[merchant_id] = inventory
+	return prepared
+
+
+static func _integer_in(value: Variant, minimum: int, maximum: int) -> bool:
+	if value is not int and value is not float:
+		return false
+	return is_finite(float(value)) and float(value) == floor(float(value)) and value >= minimum and value <= maximum
 
 
 func buy(merchant_id: String, stack_id: String, quantity: int, player_state: PlayerState, inventory: ItemInventory) -> bool:

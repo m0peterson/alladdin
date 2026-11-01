@@ -1,0 +1,49 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: expected real GUI button exists
+PASS: expected real GUI button exists
+PASS: order accepted through real UI
+PASS: expected real GUI button exists
+PASS: real purchase changes money and inventory before save
+PASS: displayed theft target reached: market_goods
+PASS: real hold emptied container: market_goods
+PASS: displayed theft target reached: warehouse_lamp
+PASS: real hold emptied container: warehouse_lamp
+PASS: stolen lamp advances order and remains unique
+PASS: ordinary stolen loot retains provenance
+PASS: save begins with active alarm
+PASS: clock positioned immediately before day boundary
+PASS: F5 writes then opens a paused confirmation
+PASS: F5 produced a valid isolated world file
+PASS: saved snapshot matches frozen live player and world
+PASS: confirmation pause stops game clock
+PASS: modal F5/F9 cannot overwrite the save
+PASS: expected real GUI button exists
+PASS: live clock crosses saved day boundary
+PASS: merchant restocks once: merchantwest
+PASS: merchant restocks once: merchanteast
+PASS: merchant restocks once: fence
+PASS: same-day update does not repeat restock
+PASS: mutation completes ready order before rollback
+PASS: F9 loads through paused confirmation
+PASS: F9 restores player, origins, empty containers, quest, merchants, alarm and clock
+PASS: load rolls back reward and does not duplicate lamp
+PASS: repeated modal load leaves restored world unchanged
+PASS: expected real GUI button exists
+PASS: expected real GUI button exists
+PASS: pause-menu button returns to main menu
+PASS: isolated valid save enables Continue
+PASS: expected real GUI button exists
+PASS: Continue recreates the saved game and confirms load
+PASS: Continue restores the identical full snapshot
+PASS: expected real GUI button exists
+PASS: reloading before boundary reproduces one finite restock
+PASS: expected real GUI button exists
+PASS: real hand-over grants exactly one reward after load
+PASS: final world save is valid
+PASS: expected real GUI button exists
+PASS: load after finale restores settled reward and delivered lamp
+PASS: expected real GUI button exists
+PASS: reopened final dialogue after load cannot repeat reward
+PASS: second real load cannot duplicate money, loot or reward
+PASS: T15–T19 integration — real F5/F9/Continue, full world, day boundary, finite restock and final reward

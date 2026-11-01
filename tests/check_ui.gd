@@ -32,12 +32,12 @@ func _run() -> void:
 	_expect(game.main_menu.visible and not game.hud.visible, "startup shows main menu")
 	_expect(game.world == null and not paused, "no world runs behind main menu")
 	var continue_button: Button = game.get_node("Interface/MainMenu/Continue") as Button
-	_expect(continue_button.disabled, "Continue disabled before save support")
-	_expect(not (game.get_node("Interface/MainMenu/SaveHint") as Label).text.is_empty(), "unavailable save explained without hover")
+	_expect(continue_button.disabled == (not FileAccess.file_exists(game.saves.path) and not FileAccess.file_exists(game.saves.path + ".bak")), "Continue follows save availability")
+	_expect(not (game.get_node("Interface/MainMenu/SaveHint") as Label).text.is_empty(), "save scope explained without hover")
 	_check_cyrillic()
 	await _save("main-menu")
 	await _tap(KEY_DOWN)
-	_expect(game.get_viewport().gui_get_focus_owner() == game.get_node("Interface/MainMenu/Exit"), "keyboard skips disabled Continue")
+	_expect(game.get_viewport().gui_get_focus_owner() == (game.get_node("Interface/MainMenu/Exit") if continue_button.disabled else continue_button), "keyboard follows Continue availability")
 	await _tap(KEY_UP)
 	_expect(game.new_game_button.has_focus(), "keyboard returns to New Game")
 	# Hold navigation and movement across keyboard activation of New Game.

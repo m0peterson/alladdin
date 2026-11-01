@@ -144,24 +144,49 @@ func _draw() -> void:
 		draw_rect(Rect2(-9, -4, 18, 4), Color("725047"))
 		draw_rect(Rect2(7, -6, 2, 7), Color("c8bfb0"))
 		return
-	var tint: Color = Color.WHITE if hit_flash > 0.0 else Color("735047")
-	draw_ellipse_shadow()
 	if phase == Phase.WINDUP:
 		draw_arc(Vector2(0, -3), ATTACK_RANGE, facing.angle() - 0.65, facing.angle() + 0.65, 12, Color("edac48"), 2.0)
 		draw_rect(Rect2(-1, -30, 2, 5), Color("ffdb70"))
 		draw_rect(Rect2(-1, -23, 2, 2), Color("ffdb70"))
 	elif phase == Phase.ACTIVE:
 		draw_arc(Vector2(0, -3), ATTACK_RANGE, facing.angle() - 0.65, facing.angle() + 0.65, 12, Color("fff0ba"), 3.0)
-	draw_rect(Rect2(-5, -2, 4, 2), Color("402e34"))
-	draw_rect(Rect2(1, -2, 4, 2), Color("402e34"))
-	draw_rect(Rect2(-4, -13, 8, 11), tint)
-	draw_rect(Rect2(-3, -20, 6, 7), Color.WHITE if hit_flash > 0.0 else Color("e0ae75"))
-	draw_rect(Rect2(-4, -20, 8, 2), Color("b64b42"))
-	var blade: Vector2 = facing * (10.0 if phase == Phase.WINDUP else 7.0)
-	draw_line(blade + Vector2(0, -12), blade + Vector2(0, -3), Color("c8bfb0"), 2.0)
+	CharacterVisual.draw_actor(self, "bandit", facing, velocity.length_squared() > 0.01, Time.get_ticks_msec() / 1000.0, hit_flash > 0.0)
 	draw_rect(Rect2(-8, -26, 16, 2), Color("402e34"))
 	draw_rect(Rect2(-8, -26, 16.0 * health / MAX_HEALTH, 2), Color("d05c4d"))
 
 
 func draw_ellipse_shadow() -> void:
 	draw_rect(Rect2(-6, -2, 12, 3), Color(0.16, 0.10, 0.14, 0.45))
+
+
+# Health and defeat persist; an unfinished attack animation resets to idle.
+func save_snapshot() -> Dictionary:
+	return {"id": "bandit", "health": health, "position": {"x": position.x, "y": position.y},
+		"facing": {"x": facing.x, "y": facing.y}}
+
+
+static func validate_snapshot(data: Variant) -> String:
+	if data is not Dictionary or data.get("id") != "bandit" or not PlayerSave.integer_in(data.get("health"), 0, MAX_HEALTH):
+		return "Неверное состояние бандита."
+	if not GuardPatrol.valid_point(data.get("position")) or not GuardPatrol.valid_point(data.get("facing"), true):
+		return "Неверное положение бандита."
+	return ""
+
+
+func restore_snapshot(data: Variant) -> bool:
+	if not validate_snapshot(data).is_empty():
+		return false
+	health = int(data["health"])
+	position = Vector2(data["position"]["x"], data["position"]["y"])
+	facing = Vector2(data["facing"]["x"], data["facing"]["y"])
+	phase = Phase.DEFEATED if health == 0 else Phase.IDLE
+	phase_time = 0.0
+	velocity = Vector2.ZERO
+	hit_flash = 0.0
+	_attack_connected = false
+	if health == 0:
+		remove_from_group("damageable")
+	else:
+		add_to_group("damageable")
+	queue_redraw()
+	return true
